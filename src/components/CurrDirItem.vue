@@ -1,29 +1,39 @@
 <template>
   <div
-    class="current-dirrectory__item"
+    class="explorer__item"
     @click="onClick"
-    :class="{ 'current-dirrectory__item_folder': !isFile }"
+    :class="{ explorer__item_folder: !isFile }"
   >
-    <div class="current-dirrectory__item__name">{{ name }}</div>
+    <div ref="nameRef" class="explorer__item__name">{{ name }}</div>
 
-    <div class="current-dirrectory__item__meta">
-      <div class="current-dirrectory__item__date-create">{{ dateCreate }}</div>
-      <div class="current-dirrectory__item__size">{{ size }}</div>
+    <div class="explorer__item__meta">
+      <div class="explorer__item__date-create">{{ dateCreate }}</div>
+      <div class="explorer__item__size">{{ size }}</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useDirStore } from '../store'
 import { IDirItem } from '../types'
+import { useRouter } from 'vue-router'
+import { PageNameEnum } from '@/router'
 
 const store = useDirStore()
+const router = useRouter()
 
 const props = defineProps<IDirItem>()
 
+const nameRef = ref<HTMLDivElement>()
+
 function onClick() {
-  if (props.isFile) return
+  const path = `${store.path}/${nameRef.value?.textContent}`
+
+  if (props.isFile) {
+    router.push({ name: PageNameEnum.editFile, params: { path } })
+    return
+  }
   store.getDir(`${store.path}/${props.name}`)
 }
 
@@ -31,7 +41,7 @@ const dateCreate = computed(() => props.birthtime?.toLocaleString())
 </script>
 
 <style>
-.current-dirrectory__item {
+.explorer__item {
   display: flex;
   flex-direction: row;
 
@@ -39,19 +49,19 @@ const dateCreate = computed(() => props.birthtime?.toLocaleString())
   cursor: pointer;
 }
 
-.current-dirrectory__item:hover > .current-dirrectory__item__name {
+.explorer__item:hover > .explorer__item__name {
   text-decoration: underline;
 }
 
-.current-dirrectory__item_folder::before {
+.explorer__item_folder::before {
   content: '>';
 }
 
-.current-dirrectory__item:hover > .current-dirrectory__item__meta {
+.explorer__item:hover > .explorer__item__meta {
   display: flex;
 }
 
-.current-dirrectory__item__meta {
+.explorer__item__meta {
   color: darkgray;
   width: 70%;
   gap: 10px;

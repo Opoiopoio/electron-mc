@@ -1,7 +1,7 @@
 import { readdir, stat } from 'fs/promises'
 
 export async function getDir(path?: string) {
-  path = path ?? process.env.APP_ROOT
+  path = path || process.env.APP_ROOT
 
   let currPath = path
 

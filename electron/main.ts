@@ -3,6 +3,7 @@ import { app, BrowserWindow, ipcMain } from 'electron'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { getDir } from './handlers/get-dir'
+import { readFile, saveFile } from './handlers/file.handlers'
 
 // const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -48,6 +49,8 @@ function createWindow() {
     // win.loadFile('dist/index.html')
     win.loadFile(path.join(RENDERER_DIST, 'index.html'))
   }
+
+  win?.webContents.openDevTools()
 }
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -70,6 +73,14 @@ app.on('activate', () => {
 
 ipcMain.handle('get-dir', (_, path) => {
   return getDir(path)
+})
+
+ipcMain.handle('read-file', (_, path) => {
+  return readFile(path)
+})
+
+ipcMain.handle('save-file', async (_, path, file) => {
+  await saveFile(path, file)
 })
 
 app.whenReady().then(createWindow)

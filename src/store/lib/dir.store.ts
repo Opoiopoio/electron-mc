@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { CustomDirItem, IDirItem } from '../../types'
 
 export const useDirStore = defineStore('dir', () => {
-  const path = ref('')
+  const path = ref()
   const currDir = ref(new Array<IDirItem>())
 
   const additionalItems = computed<IDirItem[]>(() => [
@@ -13,13 +13,13 @@ export const useDirStore = defineStore('dir', () => {
   const items = computed(() => additionalItems.value.concat(currDir.value))
 
   async function getDir(reqPath?: string) {
+    if (!reqPath && path.value) return
+
     const result: IDirItem[] = await window.ipcRenderer.invoke('get-dir', reqPath)
 
     path.value = result[0]?.path ?? reqPath
 
     currDir.value = result
-
-    console.log(currDir.value)
   }
 
   return { path, items, getDir }

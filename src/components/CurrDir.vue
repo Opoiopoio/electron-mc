@@ -1,13 +1,8 @@
 <template>
-  <div class="current-dirrectory">
-    <h4 class="current-dirrectory__path">{{ path }}</h4>
-    <div class="current-dirrectory__items">
-      <CurrDirItem
-        v-for="item of items"
-        :key="`${path}${item.name}`"
-        class="current-directory__item"
-        v-bind="item"
-      />
+  <div class="explorer">
+    <RouteHeader :path="path" />
+    <div class="explorer__items">
+      <CurrDirItem v-for="item of items" :key="`${path}${item.name}`" v-bind="item" />
     </div>
   </div>
 </template>
@@ -18,18 +13,21 @@ import { storeToRefs } from 'pinia'
 
 import { useDirStore } from '../store'
 import CurrDirItem from './CurrDirItem.vue'
+import RouteHeader from './RouteHeader.vue'
+
+const props = defineProps<{ path?: string }>()
 
 const store = useDirStore()
 
 const { items, path } = storeToRefs(store)
 
 onMounted(async () => {
-  await store.getDir()
+  await store.getDir(props.path)
 })
 </script>
 
 <style>
-.current-dirrectory {
+.explorer {
   text-align: left;
 }
 </style>

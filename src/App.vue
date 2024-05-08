@@ -1,9 +1,7 @@
-<script setup lang="ts">
-import CurrDir from './components/CurrDir.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <CurrDir />
+  <RouterView />
 </template>
 
 <style scoped>
