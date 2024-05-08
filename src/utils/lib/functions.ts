@@ -1,3 +1,4 @@
 export function getPath(path: string | string[]) {
-  return Array.isArray(path) ? `/${path.join('/')}` : path
+  const result = Array.isArray(path) ? `/${path.join('/')}` : path
+  return result
 }

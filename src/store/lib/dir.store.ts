@@ -1,26 +1,28 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { CustomDirItem, IDirItem } from '../../types'
+import { usePathStore } from './path.store'
 
 export const useDirStore = defineStore('dir', () => {
-  const path = ref()
+  const pathStore = usePathStore()
   const currDir = ref(new Array<IDirItem>())
+  const path = computed(() => pathStore.path)
 
   const additionalItems = computed<IDirItem[]>(() => [
-    new CustomDirItem(path.value, '..'),
+    new CustomDirItem(pathStore.path, '..'),
   ])
 
   const items = computed(() => additionalItems.value.concat(currDir.value))
 
-  async function getDir(reqPath?: string) {
-    if (!reqPath && path.value) return
+  async function get(reqPath?: string) {
+    if (!reqPath && pathStore.path) return
 
     const result: IDirItem[] = await window.ipcRenderer.invoke('get-dir', reqPath)
 
-    path.value = result[0]?.path ?? reqPath
+    pathStore.path = result[0]?.path ?? reqPath
 
     currDir.value = result
   }
 
-  return { path, items, getDir }
+  return { path, items, get }
 })

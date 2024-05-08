@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { useDirStore } from '../store'
@@ -22,8 +22,13 @@ const store = useDirStore()
 const { items, path } = storeToRefs(store)
 
 onMounted(async () => {
-  await store.getDir(props.path)
+  await store.get(props.path)
 })
+
+watch(
+  () => props.path,
+  () => store.get(props.path)
+)
 </script>
 
 <style>

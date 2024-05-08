@@ -34,7 +34,7 @@ function onClick() {
     router.push({ name: PageNameEnum.editFile, params: { path } })
     return
   }
-  store.getDir(`${store.path}/${props.name}`)
+  store.get(`${store.path}/${props.name}`)
 }
 
 const dateCreate = computed(() => props.birthtime?.toLocaleString())

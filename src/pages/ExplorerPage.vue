@@ -5,11 +5,17 @@
 <script setup lang="ts">
 import CurrDir from '@/components/CurrDir.vue'
 import { getPath } from '@/utils'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-const currentPath = getPath(route.params.path)
+const currentPath = ref(getPath(route.params.path))
 
-console.log(currentPath)
+watch(
+  () => route.params.path,
+  () => {
+    currentPath.value = getPath(route.params.path)
+  }
+)
 </script>

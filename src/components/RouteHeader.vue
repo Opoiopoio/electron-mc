@@ -23,7 +23,7 @@ const router = useRouter()
 const buttons = computed(() => props.path?.split('/'))
 
 function onClick(item: string) {
-  let pathToDir = '/'
+  let pathToDir = ''
   for (const button of buttons.value ?? []) {
     if (item == button) {
       pathToDir += button

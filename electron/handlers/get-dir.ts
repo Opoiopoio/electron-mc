@@ -1,4 +1,5 @@
 import { readdir, stat } from 'fs/promises'
+import { sep } from 'path'
 
 export async function getDir(path?: string) {
   path = path || process.env.APP_ROOT
@@ -14,6 +15,8 @@ export async function getDir(path?: string) {
     currPath = currPath.substring(0, index)
   }
 
+  console.log(currPath)
+
   const dirs = await readdir(path, { withFileTypes: true })
 
   const stats = dirs.map(async (dir) => {
@@ -21,7 +24,7 @@ export async function getDir(path?: string) {
       console.log(e)
       return {}
     })
-    return { ...dir, ...info, isFile: dir.isFile(), path: currPath }
+    return { ...dir, ...info, isFile: dir.isFile(), path: currPath.replaceAll(sep, '/') }
   })
 
   const unsorted = await Promise.all(stats)
